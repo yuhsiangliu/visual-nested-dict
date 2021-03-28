@@ -1,3 +1,5 @@
+import json
+
 class VisualNestedDict:
 	def __init__(self, name=None, d=[]):
 		self.name = name
@@ -13,8 +15,10 @@ class VisualNestedDict:
 		self.root = Node(name or self.name)
 		self.root.input(d)
 
-	def read_json(self, path, name=None):
-		pass
+	def read_json(self, file, name=None):
+		with open(file) as f:
+			d = json.load(f)
+		self.load(d, name=name)
 
 	def text(self, node=None, end=False):
 		node = node or self.root
@@ -83,7 +87,6 @@ if __name__ == '__main__':
 	           'name': 'Differential Calculus',
 	           'section': 100,
 	           'term': 'Spring 2021',
-	           'credict': 3,
 	           'instructor': 'John Doe',
 	           'schedule': [{'day': 'Monday', 'time': [840, 930], 'room': 'Remote'},
 	                   {'day': 'Wednesday', 'time': [510, 600], 'room': 'Remote'}],
