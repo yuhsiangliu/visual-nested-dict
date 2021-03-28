@@ -38,6 +38,7 @@ course <dict>
 2. For (nested) lists, it only reads the first element.
 
 TODO:
+
 3. Provide better support for nested lists
 4. Add an option to display values
 5. Use different colors for keys/dtypes
