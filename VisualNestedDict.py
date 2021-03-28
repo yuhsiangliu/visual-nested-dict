@@ -1,3 +1,66 @@
+class VisualNestedDict:
+	def __init__(self, name=None, d=[]):
+		self.name = name
+		self.root = Node(name)
+		if d:
+			self.root.input(d)
+		self.arrow = ['├── ', '└── ']
+		self.v_line = ['│   ', '    ']
+		self.h_line = '─'
+		self.space = []
+
+	def load(self, d, name=None):
+		self.root = Node(name or self.name)
+		self.root.input(d)
+
+	def read_json(self, path, name=None):
+		pass
+
+	def text(self, node=None, end=False):
+		node = node or self.root
+		pre = ''.join(self.space)
+		if self.space:
+			pre += self.arrow[end]
+			self.space.append(self.v_line[end])
+		else:
+			self.space.append('')
+		if type(node).__name__!='Node':
+			raise TypeError()
+		if node.dtype=='dict':
+			print(f'{pre}{node.key} <{node.dtype}>')
+			for i, child in enumerate(node.sub,1):
+				self.text(node=child, end=i==len(node.sub))
+		elif node.dtype=='list':
+			left, child, right = self.expand_list(node)
+			left = ''.join(left)
+			right = ''.join(right[::-1])
+			self.space.append(' '*(len(left)+len(node.key)+1))
+			if child==None:
+				print(f'{pre}{node.key} {left}{right}')
+			elif child.dtype!='dict':
+				print(f'{pre}{node.key} {left}{child.dtype}{right}')
+			else:
+				print(f'{pre}{node.key} {left}{child.dtype}{right}')
+				for i, gr in enumerate(child.sub,1):
+					self.text(node=gr, end=i==len(child.sub))
+			self.space.pop()
+		else:
+			print(f'{pre}{node.key} <{node.dtype}>')
+		self.space.pop()
+
+	def expand_list(self, node):
+		if type(node).__name__!='Node' or node.dtype!='list':
+			raise TypeError()
+		left, right = ['<'], ['>']
+		while node.dtype=='list':
+			left.append('list[')
+			right.append(']')
+			if not node.sub:
+				node = None
+				break
+			node = node.sub[0]
+		return left, node, right
+
 class Node:
 	def __init__(self, key=None, dtype=None, sub=None):
 		self.key = key
@@ -15,68 +78,27 @@ class Node:
 				self.sub.append(Node())
 				self.sub[-1].input(data[0])
 
-class VisualNestedDict:
-	def __init__(self, name=None, d=[]):
-		self.name = name
-		self.root = Node(name)
-		if d:
-			self.root.input(d)
-		self.draw = ['├─']
+if __name__ == '__main__':
+	course = { 'id': 'MATH 101',
+	           'name': 'Differential Calculus',
+	           'section': 100,
+	           'term': 'Spring 2021',
+	           'credict': 3,
+	           'instructor': 'John Doe',
+	           'schedule': [{'day': 'Monday', 'time': [840, 930], 'room': 'Remote'},
+	                   {'day': 'Wednesday', 'time': [510, 600], 'room': 'Remote'}],
+	           'student': [{'name': 'Adam Lee',
+	                        'major': 'mathematics',
+	                        'grade': {'homework': [10, 9, 10, 10, 8],
+	                                  'midterm': 9,
+	                                  'final': 9}},
+	                       {'first_name': 'Dana McKay',
+	                        'major': 'business',
+	                        'grade': {'homework': [8, 9, 10, 7, 8],
+	                                  'midterm': 8,
+	                                  'final': 10}}]
+	           }
 
-	def write(self, d):
-		self.root = Node(self.name)
-		self.root.input(d)
-
-	def read_json(self, path):
-		pass
-
-	def text(self, pre=0, start=-1, node=None):
-		node = node or self.root
-		if type(node).__name__!='Node':
-			raise TypeError()
-		if node.dtype=='dict':
-			print(f'{"-"*pre}{node.key} <{node.dtype}>')
-			for child in node.sub:
-				if type(child).__name__=='Node':
-					self.text(pre=pre+1, node=child)
-		elif node.dtype=='list':
-			left, child, right = self.expand_list(node)
-			left = ''.join(left)
-			right = ''.join(right[::-1])
-			if child==None:
-				print(f'{"-"*pre}{node.key} {left}{right}')
-			elif child.dtype!='dict':
-				print(f'{"-"*pre}{node.key} {left}{child.dtype}{right}')
-			else:
-				print(f'{"-"*pre}{node.key} {left}{child.dtype}{right}')
-				for gr in child.sub:
-					if type(gr).__name__=='Node':
-						self.text(pre=pre+len(node.key)+len(left)+1, node=gr)
-		else:
-			print(f'{"-"*pre}{node.key} <{node.dtype}>')
-
-	def expand_list(self, node):
-		if type(node).__name__!='Node' or node.dtype!='list':
-			raise TypeError()
-		left, right = ['<'], ['>']
-		while node.dtype=='list':
-			left.append('list[')
-			right.append(']')
-			if not node.sub:
-				node = None
-				break
-			node = node.sub[0]
-		return left, node, right
-
-
-
-
-
-
-#d = {'1':'2'}
-d = {'1': ['2','3'], '4':{'5':'6', '7':'8'}, '9': '10', '11':[['12','13']], '14':[{'15': ['16','17'], '18': ('19','20')}]}
-x = VisualNestedDict('HELLO', d)
-x.text()
-
-#for a in ['┢', '├', '┝', '├', '─', '└', '│', ' │', '││', '─│']:
-#	print(a)
+	VND = VisualNestedDict(name='course')
+	VND.load(course)
+	VND.text()
