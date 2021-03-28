@@ -8,23 +8,16 @@ Data pulled from an API are often stored in nested dictionaries, and sometimes i
 
 ## Example
 
-```python
-from VisualNestedDict import VisualNestedDict
-
-course = {'id':'MATH 101', 'name':'Differential Calculus', 'section':100, 'term':'Spring 2021', 'credict':3, 'instructor':'John Doe', 'schedule': [{'day':'Monday', 'time':[840,930], 'room':'Remote'}, {'day':'Wednesday', 'time':[510, 600], 'room':'Remote'}], 'student': [{'name': 'Adam Lee', 'major': 'mathematics', 'grade': {'homework': [10, 9, 10, 10, 8], 'midterm':9, 'final':9}}, {'first_name':'Dana McKay', 'major': 'business', 'grade': {'homework':[8, 9, 10, 7, 8], 'midterm':8, 'final': 10}}]}
-                                  
-VND = VisualNestedDict(name='course')
-VND.load(course)
-VND.text()
 ```
-Output:
-```
+>>> from VisualNestedDict import VisualNestedDict
+>>> T = VisualNestedDict()
+>>> T.read_json('course.json', name='course')
+>>> T.text()
 course <dict>
 ├── id <str>
 ├── name <str>
 ├── section <int>
 ├── term <str>
-├── credict <int>
 ├── instructor <str>
 ├── schedule <list[dict]>
 │                  ├── day <str>
@@ -39,8 +32,13 @@ course <dict>
                       └── final <int>
 ```
 
-## TODO
+## Features
 
-1. add an option to display values
-2. use different colors for keys/dtypes
-3. build an interactive GUI
+1. Read a nested dictionary or a json file, then print a tree displaying their keys & data types.
+2. For (nested) lists, it only reads the first element.
+
+TODO:
+3. Provide better support for nested lists
+4. Add an option to display values
+5. Use different colors for keys/dtypes
+6. Build an interactive GUI
