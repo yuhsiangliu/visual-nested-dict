@@ -1,0 +1,57 @@
+{% if not node %}
+  <div> input something </div>
+{% elif node.dtype == "dict" %}
+  <div><span class="caret">{{node.key}} <span class="dtype">{{node.dtype}}</span></span>
+    <div class="nested">
+      {% for child in node.sub %}
+        {% include "main/output-tree.html" with node=child %}
+      {% endfor %}
+    </div>
+  </div>
+{% elif node.dtype == "list" %}
+  <div><span class="caret">{{node.key}} <span class="dtype">{{node.dtype}}</span></span>
+    <div class="nested">
+      {% for child in node.sub %}
+        {% include "main/output-tree.html" with node=child %}
+      {% endfor %}
+    </div>
+  </div>
+{% else %}
+  <div>{{node.key}} <span class="dtype">{{node.dtype}}</span></div>
+{% endif %}
+
+
+
+<!--
+<div><span class="caret">A</span>
+  <div class="nested">
+    <div><span class="caret">H</span>
+      <div class="nested">
+        <div class="key">I</div>
+        <div class="key">J</div>
+      </div>
+    </div>
+
+    <div class="key">B</div>
+
+    <div><span class="caret">C</span>
+      <div class="nested">
+        <div class="key">D</div>
+        <div class="key">E</div>
+        <div class="key">F</div>
+        <div><span class="caret">K</span>
+          <div class="nested">
+            <div class="key">L</div>
+            <div class="key">M</div>
+            <div class="key">N</div>
+          </div>
+        </div>
+        <div class="key">O</div>
+      </div>
+    </div>
+
+    <div>G</div>
+
+  </div>
+</div>
+-->

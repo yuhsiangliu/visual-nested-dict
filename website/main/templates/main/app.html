@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+
+{% block style %}
+{% endblock%}
+
+{% block title %}
+VisualNestedDict
+{% endblock %}
+
+{% block content %}
+	<h1>VisualNestedDict</h1>
+	<div class="container">
+  		<div class="row">
+    		<div class="col-sm">
+				<form method="post">
+					{% csrf_token %}
+					{{form}}
+					<br>
+					<button type="submit", name="generate"> Generate </button>
+				</form>
+		    </div>
+		    <div class="col-sm">
+				{% for text in result %}
+					<pre>{{text}}</pre>
+				{% endfor %}
+
+				{% include "main/tree.html" %}
+		    </div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block script %}
+{% endblock%}
