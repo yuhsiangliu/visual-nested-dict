@@ -28,6 +28,7 @@ def main(response):
 	if response.method=="POST":
 		para["form"] = EnterCode(response.POST)
 		if para["form"].is_valid():
+			print(para["form"].cleaned_data)
 			code = para["form"].cleaned_data['code']
 			VND = VisualNestedDict(name="DefaultName")
 			VND.load_json(str(code))
