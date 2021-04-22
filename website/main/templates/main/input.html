@@ -1,6 +1,36 @@
-<form method="post">
+<!--
+<form class="row g-3" method="post">
 	{% csrf_token %}
 	{{form}}
 	<br>
-	<button type="submit", name="generate"> Generate </button>
+	<button type="submit", name="generate">Generate</button>
+</form>
+-->
+
+
+<form class="row g-3" method="post">
+	{% csrf_token %}
+	<div class="col-md-8">
+    	<label class="form-label">Object Name</label>
+    	{{ form.obj_name }}
+  	</div>
+  	<div class="col-md-4">
+    	<label class="form-label">Input Format</label>
+    	{{ form.input_format }}
+  	</div>
+  	<div class="col-12">
+    	{{ form.code }}
+  	</div>
+  	<div class="col-md-4">
+    	<label class="form-label">Output Format</label>
+    	{{ form.output_type }}
+  	</div>
+  	<div class="col-md-4">
+    	<label class="form-label">&nbsp;</label>
+    	{{ form.output_format}}
+  	</div>
+  	<div class="col-md-4">
+  		<label class="form-label">&nbsp;</label>
+    	<button type="submit" name="generate" class="form-control btn btn-outline-secondary">Send</button>
+  	</div>
 </form>
